@@ -1,4 +1,3 @@
-use std::collections::HashSet;
 use std::cmp::min;
 
 pub struct Hangman {
@@ -12,10 +11,6 @@ pub struct Hangman {
 struct Letter {
     character: char,
     guessed: bool
-}
-
-pub struct Game {
-    pub status: Status
 }
 
 pub enum Status {
@@ -51,7 +46,7 @@ impl Hangman {
         }
     }
 
-    pub fn make_guess(&mut self, c: &char) -> Game {
+    pub fn make_guess(&mut self, c: &char) -> Status {
 
         let c: char = c.to_ascii_lowercase();
         let mut decrement: bool = true;
@@ -59,9 +54,8 @@ impl Hangman {
         if !self.letters.contains(&c) {
             println!("{} is not a letter.", c);
             self.print_status();
-            return Game {
-                status: Status::InProgress
-            }
+            return Status::InProgress;
+
         } else if self.letters_guessed.contains(&c) {
             decrement = false;
             
@@ -74,7 +68,7 @@ impl Hangman {
         return self.handle_guess(decrement);
     }
 
-    pub fn handle_guess(&mut self, decrement: bool) -> Game {
+    pub fn handle_guess(&mut self, decrement: bool) -> Status {
 
         if decrement { self.guesses_remaining -= 1; }
 
@@ -88,25 +82,17 @@ impl Hangman {
 
     pub fn update_progress(&mut self, guess: char) {
         for l in self.progress.iter_mut() {
-            if l.character == guess {
-                l.guessed = true;
-            }
+            if l.character == guess { l.guessed = true; }
         }
     }
 
-    pub fn has_ended(&self) -> Game {
+    pub fn has_ended(&self) -> Status {
         if self.guesses_remaining <= 0 {
-            return Game {
-                status: Status::Lost
-            }
+            return Status::Lost;
         } else if self.progress.iter().filter(|x| x.guessed == false).count() == 0 {
-            return Game {
-                status: Status::Won
-            }
+            return Status::Won;
         }
-        return Game {
-            status: Status::InProgress
-        }
+        return Status::InProgress;
     }
 
     pub fn print_status(&mut self) {

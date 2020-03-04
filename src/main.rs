@@ -19,9 +19,9 @@ fn main() {
         }
 
         let characters: Vec<char> = input.chars().collect();
-        let game: hangman::Game = h.make_guess(&characters[0]);
+        let status: hangman::Status = h.make_guess(&characters[0]);
 
-        match game.status {
+        match status {
             hangman::Status::Won => {
                 println!("Congratulations, you won!");
                 break;
