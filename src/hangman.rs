@@ -102,10 +102,9 @@ impl Hangman {
         print!("\nProgess:");
         
         for l in self.progress.iter() {
-            if l.guessed {
-                print!(" {}", l.character);
-            } else {
-                print!(" _");
+            match l.guessed {
+                true => print!(" {}", l.character),
+                false => print!(" _"),
             }
         }
 
